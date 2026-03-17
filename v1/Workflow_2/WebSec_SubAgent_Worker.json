@@ -1,0 +1,85 @@
+{
+  "name": "WebSec_SubAgent_Worker",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a specialized cybersecurity agent.\nRole: {{ $json.role }}\nTarget URL: {{ $json.target }}\n\nTask:\n{{ $json.task }}\n\nPerform your task thoroughly and return the technical findings.",
+        "options": {
+          "systemMessage": "=You are a professional security assessment tool acting as {{ $json.role }}.\nYour analysis must be strictly based on the provided target: {{ $json.target }}.\nDo not hallucinate vulnerabilities."
+        }
+      },
+      "id": "sub-agent-ai",
+      "name": "Sub-Agent AI",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        512,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-3.5-sonnet",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        380,
+        520
+      ],
+      "id": "03dc9951-8fb0-47cd-8257-d5c0e1b9093a",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "EDqwRIKAEHCDMQuY",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "trigger-node",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        256,
+        304
+      ]
+    }
+  ],
+  "connections": {
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Sub-Agent AI",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Sub-Agent AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  }
+}

@@ -1,0 +1,39 @@
+# FROM n8nio/n8n:latest
+
+# Note: n8nio/n8n:latest is now a hardened Alpine image without apk.
+# Basic tools like bash and wget are already included.
+# Advanced security tools are now managed via the Kali Linux container.
+
+# FROM n8nio/n8n:latest
+
+# USER root
+
+# COPY certs/zscaler.crt /usr/local/share/ca-certificates/zscaler.crt
+
+# RUN apk update && apk add --no-cache ca-certificates && update-ca-certificates
+
+# USER node
+
+
+
+
+# USER root
+# COPY certs/zscaler.crt /usr/local/share/ca-certificates/zscaler.crt
+
+# RUN apk add --no-cache ca-certificates && update-ca-certificates
+
+# ENV NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
+# USER node
+
+# USER root
+# COPY certs/zscaler.crt /usr/local/share/ca-certificates/zscaler.crt
+# RUN /sbin/apk update && /sbin/apk add --no-cache ca-certificates && /usr/sbin/update-ca-certificates
+# ENV NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
+# USER node
+
+FROM n8nio/n8n:latest
+
+USER root
+COPY certs/zscaler.crt /certs/zscaler.crt
+ENV NODE_EXTRA_CA_CERTS=/certs/zscaler.crt
+USER node
