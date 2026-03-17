@@ -15,9 +15,6 @@ COPY ./victim_entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Switch back to node user? Check if agent needs root. 
-# Agent needs root to start service usually, unless configured otherwise.
-# We will start agent as root in entrypoint, then drop privs or just run node app.
-# Since agent runs as background service, entrypoint can run it.
-
+# Agent needs root to start service usually. We will start agent as root in entrypoint.
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["npm", "start"]

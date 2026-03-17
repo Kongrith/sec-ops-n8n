@@ -118,7 +118,8 @@ services:
       - INDEXER_URL=https://wazuh-indexer:9200
       - INDEXER_USERNAME=admin
       - INDEXER_PASSWORD=SecretPassword123!
-      - WAZUH_API_URL=https://wazuh-manager:55000
+      - WAZUH_API_URL=https://wazuh-manager
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
     depends_on:
       - wazuh.indexer
       - wazuh.manager

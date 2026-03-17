@@ -10,6 +10,9 @@ sleep 10
 echo "Registering Wazuh Agent..."
 /var/ossec/bin/agent-auth -m $WAZUH_MANAGER
 
+echo "Configuring Manager IP in ossec.conf..."
+sed -i "s/MANAGER_IP/$WAZUH_MANAGER/g" /var/ossec/etc/ossec.conf
+
 echo "Starting Wazuh Agent..."
 /var/ossec/bin/wazuh-control start
 

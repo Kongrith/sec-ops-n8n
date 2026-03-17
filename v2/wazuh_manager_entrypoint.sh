@@ -20,3 +20,5 @@ else
     echo "ERROR: $CONFIG_FILE not found. Integration injection failed."
 fi
 
+# Fix Filebeat SSL Verification for connection to wazuh-indexer
+sed -i 's/^.*ssl\.verification_mode:.*/  ssl.verification_mode: none/g' /etc/filebeat/filebeat.yml

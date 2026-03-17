@@ -1,0 +1,86 @@
+{
+  "name": "Wazuh SIEM Alert Receiver",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "wazuh",
+        "options": {}
+      },
+      "id": "b3e0e7cd-5d03-45ab-8f55-1f9e9a11db1e",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        380,
+        240
+      ],
+      "webhookId": "fe87d7b3-8ab5-46f9-bcbf-4700d3a5a711"
+    },
+    {
+      "parameters": {
+        "jsCode": "const payload = $input.item.json.body || {};\nconst rule = payload.rule || {};\nconst agent = payload.agent || {};\n\nreturn {\n  json: {\n    message: `🚨 Wazuh Security Alert: ${rule.description || 'Unknown'}`,\n    severity: rule.level || 'Info',\n    agent: agent.name || 'Unknown Agent',\n    raw: payload\n  }\n};\n"
+      },
+      "id": "3b6dc0f8-c2b3-4f9e-a89c-ac38da1beacf",
+      "name": "Parse Alert",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        600,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "={{ $json.message }}\\n**Severity Level:** {{ $json.severity }}\\n**Agent:** {{ $json.agent }}",
+        "options": {}
+      },
+      "id": "76cd0a38-c645-42f2-bd5a-ab0f80bc2985",
+      "name": "Discord",
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        820,
+        240
+      ],
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "THnybLg0kTchFk3v",
+          "name": "Discord Webhook account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Parse Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Alert": {
+      "main": [
+        [
+          {
+            "node": "Discord",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b1a1a735-8b5e-4efb-8667-123456789abc",
+  "tags": []
+}
